@@ -70,73 +70,75 @@ main:
 		MOV pc, lr
 
 .data
-prompt_p: .asciz "Enter prime number p (p < 50): "
-prompt_q: .asciz "Enter prime number q (q < 50): "
-prompt_e: .asciz "Enter public exponent e (1 < e < phi(n), and gcd(e, phi(n)) = 1): "
-scan_format: .asciz "%d"
-scan_string_format: .asciz "%s"
-p: .word 0
-q: .word 0
-e: .word 0
-d: .word 0
-not_prime: .asciz "\The number is not a prime. Please enter again.\n"
-is_prime:    .asciz "\The number is a prime.\n"
-msg_pubkey: .asciz "Public Key (n, e) = (%d, %d)\n"
-msg_n: .asciz "Modulus n = %d\n"
-msg_phi: .asciz "Totient phi(n) = %d\n"
-msg_e: .asciz "Public exponent e = %d\n"
-invalid_e_msg: .asciz "Invalid e. Must satisfy: 1 < e < phi and gcd(e, phi) = 1.\n"
-msg_d: .asciz "Private exponent d = %d\n"
-n_val: .word 0
-e_val: .word 0
-d_val: .word 0
-mod_val: .word 0    @ Memory location to store mod result
+prompt_p: 		.asciz 		"Enter prime number p (p < 50): "
+prompt_q: 		.asciz 		"Enter prime number q (q < 50): "
+prompt_e: 		.asciz 		"Enter public exponent e (1 < e < phi(n), and gcd(e, phi(n)) = 1): "
+scan_format: 		.asciz 		"%d"
+scan_string_format: 	.asciz 		"%s"
 
-debug_e: .asciz "Debug Before cprivexp: e = %d, phi = %d\n"
-trying_x: .asciz "Trying x = %d\n"
+p: 			.word 		0
+q: 			.word 		0
+e: 			.word 		0
+d: 			.word 		0
 
-menu_text: .asciz "\nSelect an option:\n1 - Generate Public and Private Keys\n2 - Encrypt a Message\n3 - Decrypt a Message\n4 - Exit\n\n"
-menu_choice: .word 0
+not_prime:   		.asciz 		"\The number is not a prime. Please enter again.\n"
+is_prime:    		.asciz 		"\The number is a prime.\n"
 
-sample_input: .asciz "Hello from Team 1"
+msg_pubkey:   		.asciz 		"Public Key (n, e) = (%d, %d)\n"
+msg_n: 			.asciz 		"Modulus n = %d\n"
+msg_phi: 		.asciz 		"Totient phi(n) = %d\n"
+msg_e: 			.asciz 		"Public exponent e = %d\n"
+invalid_e_msg: 		.asciz 		"Invalid e. Must satisfy: 1 < e < phi and gcd(e, phi) = 1.\n"
+msg_d: 			.asciz 		"Private exponent d = %d\n"
+
+n_val: 			.word 		0
+e_val: 			.word 		0
+d_val: 			.word 		0
+mod_val: 		.word 		0    @ Memory location to store mod result
+
+debug_e: 		.asciz 		"Debug Before cprivexp: e = %d, phi = %d\n"
+trying_x: 		.asciz 		"Trying x = %d\n"
+
+menu_text: 		.asciz 		"\nSelect an option:\n1 - Generate Public and Private Keys\n2 - Encrypt a Message\n3 - Decrypt a Message\n4 - Exit\n\n"
+menu_choice: 		.word 		0
+
+sample_input: 		.asciz 		"Hello from Team 1"
 
 /* Debug messages for encryption/decryption */
-debug_pow_msg: .asciz "Debug: %d^%d = %d (before mod)\n"
-debug_pow_result_msg: .asciz "Debug: pow result = %d\n"
-debug_char: .asciz "Processing char: %c (ASCII %d)\n"
-encrypted_char: .asciz "  Encrypted to: %d\n"
-decrypted_char: .asciz "  Decrypted to: %c (ASCII %d)\n\n"
-debug_num: .asciz "Decrypting number: %d\n"
-debug_num_msg: .asciz "Encrypted number: %d\n"
-debug_mod_msg: .asciz "Modulus: %d, Mod result: %d\n"
+debug_pow_msg: 		.asciz 		"Debug: %d^%d = %d (before mod)\n"
+debug_pow_result_msg: 	.asciz 		"Debug: pow result = %d\n"
+debug_char: 		.asciz 		"Processing char: %c (ASCII %d)\n"
+encrypted_char: 	.asciz 		"  Encrypted to: %d\n"
+decrypted_char: 	.asciz 		"  Decrypted to: %c (ASCII %d)\n\n"
+debug_num: 		.asciz 		"Decrypting number: %d\n"
+debug_num_msg: 		.asciz 		"Encrypted number: %d\n"
+debug_mod_msg: 		.asciz 		"Modulus: %d, Mod result: %d\n"
 
 /* Test case messages */
-pow_test_msg: .asciz "\nTesting pow function: 5^3...\n"
-pow_test_result: .asciz "pow(%d, %d) = %d (expected 125)\n\n"
-mod_test_msg: .asciz "Testing mod function: 17 mod 5...\n"
-mod_test_result: .asciz "%d mod %d = %d (expected 2)\n\n"
-modexp_debug_input: .asciz "Testing modexp function: computing %d^%d mod %d\n"
-modexp_debug_pow: .asciz "pow result: %d\n"
-modexp_debug_result: .asciz "final result: %d\n\n"
-test_case_msg: .asciz "\nRunning modexp test case: 5^3 mod 13 (expect 8)\n"
-test_result_msg: .asciz "modexp = %d\n\n"
+pow_test_msg: 		.asciz 		"\nTesting pow function: 5^3...\n"
+pow_test_result: 	.asciz 		"pow(%d, %d) = %d (expected 125)\n\n"
+mod_test_msg: 		.asciz 		"Testing mod function: 17 mod 5...\n"
+mod_test_result: 	.asciz 		"%d mod %d = %d (expected 2)\n\n"
+modexp_debug_input: 	.asciz 		"Testing modexp function: computing %d^%d mod %d\n"
+modexp_debug_pow: 	.asciz 		"pow result: %d\n"
+modexp_debug_result: 	.asciz 		"final result: %d\n\n"
+test_case_msg: 		.asciz 		"\nRunning modexp test case: 5^3 mod 13 (expect 8)\n"
+test_result_msg: 	.asciz 		"modexp = %d\n\n"
 
 
+input_filename:  	.asciz 		"plaintxt.txt"
+output_filename: 	.asciz 		"encrypted.txt"
+read_mode:       	.asciz 		"r"
+write_mode:      	.asciz 		"w"
+char_format:     	.asciz 		"%c"
+input_error_msg: 	.asciz 		"Error opening input file.\n"
+output_error_msg:	.asciz 		"Error opening output file.\n"
 
-input_filename:  .asciz "plaintxt.txt"
-output_filename: .asciz "encrypted.txt"
-read_mode:       .asciz "r"
-write_mode:      .asciz "w"
-char_format:     .asciz "%c"
-input_error_msg: .asciz "Error opening input file.\n"
-output_error_msg:.asciz "Error opening output file.\n"
-
-sample_input_decrypt: .word 23, 45, 78, 89, 90, 0   @ Example encrypted numbers, null-terminated
+sample_input_decrypt: 	.word 		23, 45, 78, 89, 90, 0   @ Example encrypted numbers, null-terminated
 
 /* Success/failure messages */
-encrypt_success_msg: .asciz "Encryption complete!\n"
-decrypt_success_msg: .asciz "Decryption complete!\n"
-
+encrypt_success_msg: 	.asciz 		"Encryption complete!\n"
+decrypt_success_msg: 	.asciz 		"Decryption complete!\n"
 # End Main
 
 /* ------------------------------------ */
@@ -663,6 +665,7 @@ encrypt_message:
     	MOV r1, r5
     	BL printf
 
+	LDR r0, =
 	LDR r6, =sample_input     @ r6 = pointer to current character
 
 	@ Then start the loop
